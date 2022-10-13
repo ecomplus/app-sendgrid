@@ -7,8 +7,8 @@
 
 const app = {
   app_id: 129856,
-  title: 'My Awesome E-Com Plus App',
-  slug: 'my-awesome-app',
+  title: 'SendGrid',
+  slug: 'sendgrid',
   type: 'external',
   state: 'active',
   authentication: true,
