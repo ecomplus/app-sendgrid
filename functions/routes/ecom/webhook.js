@@ -1,12 +1,13 @@
 // read configured E-Com Plus app data
 const getAppData = require('./../../lib/store-api/get-app-data')
+const handleOrder = require('./../../lib/sendgrid/handle-order')
 
 const SKIP_TRIGGER_NAME = 'SkipTrigger'
-const ECHO_SUCCESS = 'SUCCESS'
 const ECHO_SKIP = 'SKIP'
 const ECHO_API_ERROR = 'STORE_API_ERR'
 
 exports.post = ({ appSdk }, req, res) => {
+  console.log('>> Webhook #')
   // receiving notification from Store API
   const { storeId } = req
 
@@ -15,11 +16,11 @@ exports.post = ({ appSdk }, req, res) => {
    * Ref.: https://developers.e-com.plus/docs/api/#/store/triggers/
    */
   const trigger = req.body
+  const { resource, subresource, action } = trigger
 
   // get app configured options
   getAppData({ appSdk, storeId })
-
-    .then(appData => {
+    .then(async (appData) => {
       if (
         Array.isArray(appData.ignore_triggers) &&
         appData.ignore_triggers.indexOf(trigger.resource) > -1
@@ -30,12 +31,25 @@ exports.post = ({ appSdk }, req, res) => {
         throw err
       }
 
-      /* DO YOUR CUSTOM STUFF HERE */
+      if (!appData.sendgrid_api_key || appData.sendgrid_api_key === '') {
+        const msg = `Webhook for ${storeId}, SendGrid API key not configured`
+        res.status(412).send(msg)
+      }
 
-      // all done
-      res.send(ECHO_SUCCESS)
+      if (!appData.sendgrid_mail || appData.sendgrid_mail === '') {
+        const msg = `Webhook for ${storeId}, SendGrid Merchant email not configured`
+        res.status(412).send(msg)
+      }
+
+      console.log('> ', action, ': ', resource, '[', subresource, '] <')
+      switch (resource) {
+        case 'carts': // abandoned cart
+          break
+        case 'orders':
+          await handleOrder(res, appSdk, trigger, appData, storeId)
+          break
+      }
     })
-
     .catch(err => {
       if (err.name === SKIP_TRIGGER_NAME) {
         // trigger ignored by app configuration

@@ -75,14 +75,14 @@ const app = {
       // 'DELETE',        // Delete categories
     ],
     customers: [
-      // 'GET',           // List/read customers
+      'GET',           // List/read customers
       // 'POST',          // Create customers
       // 'PATCH',         // Edit customers
       // 'PUT',           // Overwrite customers
       // 'DELETE',        // Delete customers
     ],
     orders: [
-      // 'GET',           // List/read orders with public and private fields
+      'GET',           // List/read orders with public and private fields
       // 'POST',          // Create orders
       // 'PATCH',         // Edit orders
       // 'PUT',           // Overwrite orders
@@ -97,16 +97,18 @@ const app = {
     ],
 
     /**
-     * Prefer using 'fulfillments' and 'payment_history' subresources to manipulate update order status.
+     * Prefer using fulfillments and payment_history subresources to manipulate update order status.
      */
     'orders/fulfillments': [
       // 'GET',           // List/read order fulfillment and tracking events
       // 'POST',          // Create fulfillment event with new status
+      'PATCH'
       // 'DELETE',        // Delete fulfillment event
     ],
     'orders/payments_history': [
       // 'GET',           // List/read order payments history events
       // 'POST',          // Create payments history entry with new status
+      'PATCH'
       // 'DELETE',        // Delete payments history entry
     ],
 
@@ -138,37 +140,79 @@ const app = {
   },
 
   admin_settings: {
-    /**
-     * JSON schema based fields to be configured by merchant and saved to app `data` / `hidden_data`, such as:
-
-     webhook_uri: {
-       schema: {
-         type: 'string',
-         maxLength: 255,
-         format: 'uri',
-         title: 'Notifications URI',
-         description: 'Unique notifications URI available on your Custom App dashboard'
-       },
-       hide: true
-     },
-     token: {
-       schema: {
-         type: 'string',
-         maxLength: 50,
-         title: 'App token'
-       },
-       hide: true
-     },
-     opt_in: {
-       schema: {
-         type: 'boolean',
-         default: false,
-         title: 'Some config option'
-       },
-       hide: false
-     },
-
-     */
+    sendgrid_mail: {
+      schema: {
+        type: 'string',
+        title: 'E-mail configurado no SendGrid',
+        description: 'Seu e-mail de remetente configurado no SendGrid (https://app.sendgrid.com/settings/sender_auth/senders)'
+      },
+      hide: true,
+    },
+    sendgrid_api_key: {
+      schema: {
+        type: 'string',
+        title: 'SendGrid key',
+        description: 'API key do SendGrid (https://app.sendgrid.com/settings/api_keys)'
+      },
+      hide: true,
+    },
+    sendgrid_templates: {
+      schema: {
+        type: 'array',
+        title: 'Templantes dos e-mails',
+        description: 'Selecione quais trigger que terão e-mails enviados',
+        uniqueItems: true,
+        items: {
+          type: 'object',
+          required: ['trigger', 'id'],
+          properties: {
+            trigger: {
+              type: 'string',
+              enum: [
+                'Carrinho Abandonado',
+                'Novo Pedido',
+                'Pendente',
+                'Sobre Analise',
+                'Autorizado',
+                'Não Autorizado',
+                'Pago',
+                'Em Disputa',
+                'Devolvido',
+                'Cancelado',
+                'Fatura Emitida',
+                'Em Produção',
+                'Em Separação',
+                'Pronto para Envio',
+                'Enviado',
+                'Entregue',
+                'Voltou para Troca',
+                'Recebido para Troca',
+                'Retornado',
+                'Parcialmente Pago',
+                'Parcialmente Ressarcido',
+                'Sem Status',
+                'Enviado Parcialmente',
+                'Parcialmente Entregue'
+              ],
+              title: 'Gatilhos',
+              description: 'Gatilho de e-mail'
+            },
+            id: {
+              type: 'string',
+              title: 'ID do Template',
+              description: 'Id do templante no SendGrid para o gatilho escolhido.'
+            },
+            disable: {
+              type: 'boolean',
+              title: 'Desativar envio de e-mail',
+              default: false,
+              description: 'Desativar envio de e-mail para o gatilho escolhido.'
+            }
+          }
+        }
+      },
+      hide: true,
+    }
   }
 }
 
@@ -179,8 +223,7 @@ const app = {
 
 const procedures = []
 
-/**
- * Uncomment and edit code above to configure `triggers` and receive respective `webhooks`:
+//  * Uncomment and edit code above to configure `triggers` and receive respective `webhooks`:
 
 const { baseUri } = require('./__env')
 
@@ -198,37 +241,24 @@ procedures.push({
     // Obs.: you probably SHOULD NOT enable the orders triggers below and the one above (create) together.
     {
       resource: 'orders',
-      field: 'financial_status',
+      field: 'status',
+    },
+    // {
+    //   resource: 'orders',
+    //   field: 'financial_status',
+    // },
+    // {
+    //   resource: 'orders',
+    //   field: 'fulfillment_status',
+    // },
+    {
+      resource: 'orders',
+      subresource: 'payments_history',
     },
     {
       resource: 'orders',
-      field: 'fulfillment_status',
+      subresource: 'fulfillments',
     },
-
-    // Receive notifications when products/variations stock quantity changes:
-    {
-      resource: 'products',
-      field: 'quantity',
-    },
-    {
-      resource: 'products',
-      subresource: 'variations',
-      field: 'quantity'
-    },
-
-    // Receive notifications when cart is edited:
-    {
-      resource: 'carts',
-      action: 'change',
-    },
-
-    // Receive notifications when customer is deleted:
-    {
-      resource: 'customers',
-      action: 'delete',
-    },
-
-    // Feel free to create custom combinations with any Store API resource, subresource, action and field.
   ],
 
   webhooks: [
@@ -243,8 +273,7 @@ procedures.push({
   ]
 })
 
- * You may also edit `routes/ecom/webhook.js` to treat notifications properly.
- */
+//  * You may also edit `routes/ecom/webhook.js` to treat notifications properly.
 
 exports.app = app
 
