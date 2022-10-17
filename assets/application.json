@@ -16,17 +16,102 @@
     "products": [],
     "brands": [],
     "categories": [],
-    "customers": [],
-    "orders": [],
+    "customers": [
+      "GET"
+    ],
+    "orders": [
+      "GET"
+    ],
     "carts": [],
-    "orders/fulfillments": [],
-    "orders/payments_history": [],
+    "orders/fulfillments": [
+      "PATCH"
+    ],
+    "orders/payments_history": [
+      "PATCH"
+    ],
     "products/quantity": [],
     "products/variations/quantity": [],
     "products/price": [],
     "products/variations/price": []
   },
-  "admin_settings": {},
+  "admin_settings": {
+    "sendgrid_mail": {
+      "schema": {
+        "type": "string",
+        "title": "E-mail configurado no SendGrid",
+        "description": "Seu e-mail de remetente configurado no SendGrid (https://app.sendgrid.com/settings/sender_auth/senders)"
+      },
+      "hide": true
+    },
+    "sendgrid_api_key": {
+      "schema": {
+        "type": "string",
+        "title": "SendGrid key",
+        "description": "API key do SendGrid (https://app.sendgrid.com/settings/api_keys)"
+      },
+      "hide": true
+    },
+    "sendgrid_templates": {
+      "schema": {
+        "type": "array",
+        "title": "Templantes dos e-mails",
+        "description": "Selecione quais trigger que terão e-mails enviados",
+        "uniqueItems": true,
+        "items": {
+          "type": "object",
+          "required": [
+            "trigger",
+            "id"
+          ],
+          "properties": {
+            "trigger": {
+              "type": "string",
+              "enum": [
+                "Carrinho Abandonado",
+                "Novo Pedido",
+                "Pendente",
+                "Sobre Analise",
+                "Autorizado",
+                "Não Autorizado",
+                "Pago",
+                "Em Disputa",
+                "Devolvido",
+                "Cancelado",
+                "Fatura Emitida",
+                "Em Produção",
+                "Em Separação",
+                "Pronto para Envio",
+                "Enviado",
+                "Entregue",
+                "Voltou para Troca",
+                "Recebido para Troca",
+                "Retornado",
+                "Parcialmente Pago",
+                "Parcialmente Ressarcido",
+                "Sem Status",
+                "Enviado Parcialmente",
+                "Parcialmente Entregue"
+              ],
+              "title": "Gatilhos",
+              "description": "Gatilho de e-mail"
+            },
+            "id": {
+              "type": "string",
+              "title": "ID do Template",
+              "description": "Id do templante no SendGrid para o gatilho escolhido."
+            },
+            "disable": {
+              "type": "boolean",
+              "title": "Desativar envio de e-mail",
+              "default": false,
+              "description": "Desativar envio de e-mail para o gatilho escolhido."
+            }
+          }
+        }
+      },
+      "hide": true
+    }
+  },
   "auth_callback_uri": "https://us-central1-ecom-sendgrid.cloudfunctions.net/app/ecom/auth-callback",
   "version": "1.0.0"
 }
