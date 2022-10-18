@@ -1,13 +1,14 @@
 // read configured E-Com Plus app data
 const getAppData = require('./../../lib/store-api/get-app-data')
 const handleOrder = require('./../../lib/sendgrid/handle-order')
+const saveCarts = require('./../../lib/sendgrid/save-carts')
 
 const SKIP_TRIGGER_NAME = 'SkipTrigger'
 const ECHO_SKIP = 'SKIP'
 const ECHO_API_ERROR = 'STORE_API_ERR'
 
 exports.post = ({ appSdk }, req, res) => {
-  console.log('>> Webhook #')
+  console.log('>> Webhook API ')
   // receiving notification from Store API
   const { storeId } = req
 
@@ -44,9 +45,10 @@ exports.post = ({ appSdk }, req, res) => {
       console.log('> ', action, ': ', resource, '[', subresource, '] <')
       switch (resource) {
         case 'carts': // abandoned cart
+          await saveCarts(res, appSdk, appData, trigger, storeId)
           break
         case 'orders':
-          await handleOrder(res, appSdk, trigger, appData, storeId)
+          await handleOrder(res, appSdk, appData, trigger, storeId)
           break
       }
     })

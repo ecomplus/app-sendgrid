@@ -23,6 +23,7 @@ const sgAxios = axios.create({
 })
 
 const sgSendMail = (bodyMail, apiKey) => {
+  console.log('>> Sending email... ')
   return sgAxios.post('/send', bodyMail, {
     headers: {
       Authorization: `Bearer ${apiKey}`
@@ -36,7 +37,7 @@ const updateOrderSubresource = (appSdk, storeId, orderId, subresource, lastValid
   const data = {
     customer_notified: true
   }
-  console.log(`>> Email Send: #${storeId} ${statusRecordId}`)
+  // console.log(`>> Email Send: #${storeId} ${statusRecordId}`)
   return appSdk.apiRequest(storeId, url, 'PATCH', data)
 }
 

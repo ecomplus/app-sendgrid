@@ -119,18 +119,19 @@ const listTemplantes = [
   }
 ]
 
-const addTotalPriceItem = (order) => {
-  order.items.forEach(item => {
+const addTotalPriceItem = (orderOrCart) => {
+  orderOrCart.items.forEach(item => {
     item.total_price = item.quantity * (item.final_price || item.price)
   })
 }
 
-module.exports = (appData, status, order, store, customer) => {
-  if (order) {
+module.exports = (appData, status, orderOrCart, store, customer) => {
+  if (orderOrCart) {
     // Sendgrid does not perform calculations
-    addTotalPriceItem(order)
+    addTotalPriceItem(orderOrCart)
   }
 
+  console.log('>> to: ', customer.main_email, ' from: ', appData.sendgrid_mail)
   const body = {
     from: {
       email: appData.sendgrid_mail,
@@ -153,7 +154,7 @@ module.exports = (appData, status, order, store, customer) => {
           customer: {
             display_name: customer.display_name
           },
-          order
+          ...orderOrCart
         }
       }
     ]
@@ -164,7 +165,7 @@ module.exports = (appData, status, order, store, customer) => {
   const templante = templantes.find(templateFind => templateFind.trigger === nameTemplante.trigger)
 
   if (templante && !templante.disable) {
-    console.log('> Template found and active <')
+    // console.log('> Template found and active <')
     body.template_id = `${templante.id}`
     return body
   }

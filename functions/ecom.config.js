@@ -89,7 +89,7 @@ const app = {
       // 'DELETE',        // Delete orders
     ],
     carts: [
-      // 'GET',           // List all carts (no auth needed to read specific cart only)
+      'GET',           // List all carts (no auth needed to read specific cart only)
       // 'POST',          // Create carts
       // 'PATCH',         // Edit carts
       // 'PUT',           // Overwrite carts
@@ -156,11 +156,19 @@ const app = {
       },
       hide: true,
     },
+    is_abandoned_after_days: {
+      schema: {
+        type: 'integer',
+        title: 'Carrinho Abandonado',
+        description: 'Após quantos dias avisar ao comprador sobre o carrinho abandonado'
+      },
+      hide: false,
+    },
     sendgrid_templates: {
       schema: {
         type: 'array',
         title: 'Templantes dos e-mails',
-        description: 'Selecione quais trigger que terão e-mails enviados',
+        description: 'Selecione para quais tipos de gatilhos os e-mails serão enviados',
         uniqueItems: true,
         items: {
           type: 'object',
@@ -233,24 +241,12 @@ procedures.push({
   triggers: [
     // Receive notifications when new order is created:
     {
-      resource: 'orders',
-      action: 'create',
+      resource: 'carts',
+      action: 'create'
     },
 
     // Receive notifications when order financial/fulfillment status are set or changed:
     // Obs.: you probably SHOULD NOT enable the orders triggers below and the one above (create) together.
-    {
-      resource: 'orders',
-      field: 'status',
-    },
-    // {
-    //   resource: 'orders',
-    //   field: 'financial_status',
-    // },
-    // {
-    //   resource: 'orders',
-    //   field: 'fulfillment_status',
-    // },
     {
       resource: 'orders',
       subresource: 'payments_history',

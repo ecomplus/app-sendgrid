@@ -29,7 +29,7 @@ const orderStatus = [
   'returned'
 ]
 
-module.exports = async (res, appSdk, trigger, appData, storeId) => {
+module.exports = async (res, appSdk, appData, trigger, storeId) => {
   const apiKey = appData.sendgrid_api_key
   console.log('# Order')
   const { subresource, action } = trigger
@@ -49,7 +49,6 @@ module.exports = async (res, appSdk, trigger, appData, storeId) => {
       const customerId = order.buyers[0]._id
       const customer = await getApiResourceById(appSdk, storeId, 'customers', customerId)
       if (customer) {
-        // if (subresource === 'fulfillments' || subresource === 'payments_history')
         let isCustomerNotified, lastNotifiedStatus
 
         if (Array.isArray(order[subresource])) {
@@ -113,6 +112,7 @@ module.exports = async (res, appSdk, trigger, appData, storeId) => {
           if (emailData) {
             try {
               await sendEmail(emailData, apiKey)
+              console.log('>> Email sent')
               if (subresource === 'payments_history' || subresource === 'fulfillment') {
                 await updateOrderSubresource(appSdk, storeId, orderId, subresource, lastNotifiedStatus, insertedId)
               }
@@ -126,19 +126,19 @@ module.exports = async (res, appSdk, trigger, appData, storeId) => {
             res.send('SUCCESS')
           }
         } else {
-          console.log('>> Customer already notified of this status')
+          // console.log('>> Customer already notified of this status')
           res.send('SUCCESS')
         }
       } else {
-        console.error('>> Not Found Customer')
+        // console.error('>> Not Found Customer')
         res.status(404).send({ message: 'Not Found Customer' })
       }
     } else {
-      console.error('>> Not found Order or Store')
+      // console.error('>> Not found Order or Store')
       res.status(404).send({ message: 'Not found Order or Store' })
     }
   } else {
-    console.log('>> Not send Email, ', action)
+    // console.log('>> Not send Email, ', action)
     res.send('SUCCESS')
   }
 }
