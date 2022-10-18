@@ -4,7 +4,7 @@ const getApiResourceById = require('../../lib/sendgrid/utils').getApiResourceByI
 const sendEmail = require('../../lib/sendgrid/utils').sgSendMail
 
 module.exports = async (appSdk, admin) => {
-  console.log('# Check acandoned carts')
+  console.log('# Check abandoned carts')
   const abandonedCarts = await admin.firestore().collection('sg_abandoned_cart')
     .where('sendIn', '<', admin.firestore.Timestamp.fromDate(new Date()))
     .limit(400) // https://docs.sendgrid.com/api-reference/how-to-use-the-sendgrid-v3-api/rate-limits
@@ -37,7 +37,7 @@ module.exports = async (appSdk, admin) => {
                 if (emailData) {
                   sendEmail(emailData, apiKey)
                     .then((data) => {
-                      console.log('>> Email sent ', data)
+                      console.log('>> Email sent ')
                       snapshot.ref.delete()
                         .catch(console.error)
                     })
@@ -47,14 +47,8 @@ module.exports = async (appSdk, admin) => {
                 } else {
                   console.log(`>> Do not send email, email data not found or trigger not configured #${storeId}`)
                 }
-              } else {
-                console.log('>> Cart already completed or available')
-              }
-            } else {
-              console.error(`>> Not found Cart, Store or Customer #${storeId}`)
-            }
-          } else {
-            console.error(`>> Store #${storeId}, SendGrid API key or Merchant email not configured`)
+              } 
+            } 
           }
         })
         .catch(err => {

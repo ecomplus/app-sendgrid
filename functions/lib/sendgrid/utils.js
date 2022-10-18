@@ -23,7 +23,7 @@ const sgAxios = axios.create({
 })
 
 const sgSendMail = (bodyMail, apiKey) => {
-  console.log('>> Sending email... ')
+  // console.log('>> Sending email... ')
   return sgAxios.post('/send', bodyMail, {
     headers: {
       Authorization: `Bearer ${apiKey}`
