@@ -1,13 +1,12 @@
-const { firestore } = require('firebase-admin')
 const getAppData = require('../../lib/store-api/get-app-data')
 const parseCartToSend = require('../../lib/sendgrid/parse-data-to-send')
 const getApiResourceById = require('../../lib/sendgrid/utils').getApiResourceById
 const sendEmail = require('../../lib/sendgrid/utils').sgSendMail
 
-module.exports = async (appSdk) => {
+module.exports = async (appSdk, admin) => {
   console.log('# Check acandoned carts')
-  const abandonedCarts = await firestore.collection('sg_abandoned_cart')
-    .where('sendIn', '<', firestore.Timestamp.fromDate(new Date()))
+  const abandonedCarts = await admin.firestore().collection('sg_abandoned_cart')
+    .where('sendIn', '<', admin.firestore.Timestamp.fromDate(new Date()))
     .limit(400) // https://docs.sendgrid.com/api-reference/how-to-use-the-sendgrid-v3-api/rate-limits
     .get()
 
