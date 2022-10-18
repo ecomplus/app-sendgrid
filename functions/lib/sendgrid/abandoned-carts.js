@@ -1,4 +1,3 @@
-// const { firestore } = require('firebase-admin')
 const getAppData = require('../../lib/store-api/get-app-data')
 const parseCartToSend = require('../../lib/sendgrid/parse-data-to-send')
 const getApiResourceById = require('../../lib/sendgrid/utils').getApiResourceById
