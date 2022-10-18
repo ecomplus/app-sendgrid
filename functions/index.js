@@ -149,7 +149,7 @@ const sendAbandonedCarts = require('./lib/sendgrid/abandoned-carts')
 const sendAbandonedCartsCron = '25 */3 * * *'
 exports.sendAbandonedCartsEmail = functions.pubsub.schedule(sendAbandonedCartsCron).onRun(() => {
   return prepareAppSdk().then(appSdk => {
-    return sendAbandonedCarts(appSdk, admin)
+    sendAbandonedCarts(appSdk)
   }).catch(err => {
     console.error(err)
   })
