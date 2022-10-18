@@ -148,8 +148,8 @@ console.log(`-- Sheduled update E-Com Plus tokens '${cron}'`)
 const sendAbandonedCarts = require('./lib/sendgrid/abandoned-carts')
 const sendAbandonedCartsCron = '25 */3 * * *'
 exports.sendAbandonedCartsEmail = functions.pubsub.schedule(sendAbandonedCartsCron).onRun(() => {
-  prepareAppSdk().then(appSdk => {
-    sendAbandonedCarts(appSdk, admin)
+  return prepareAppSdk().then(appSdk => {
+    return sendAbandonedCarts(appSdk, admin)
   }).catch(err => {
     console.error(err)
   })
