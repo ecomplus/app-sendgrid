@@ -11,7 +11,7 @@ module.exports = async (res, appSdk, appData, trigger, storeId) => {
       if (cart) {
         const { customers, available, completed } = cart
         if (available && completed === false) {
-          const afterDaysInMs = appData.is_abandoned_after_days * 24 * 60 * 60 * 1000
+          const afterDaysInMs = (appData.is_abandoned_after_days || 1) * 24 * 60 * 60 * 1000
           const createAt = new Date()
           const sendIn = new Date(createAt.getTime() + afterDaysInMs)
           const customerId = customers[0]
