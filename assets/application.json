@@ -22,7 +22,9 @@
     "orders": [
       "GET"
     ],
-    "carts": [],
+    "carts": [
+      "GET"
+    ],
     "orders/fulfillments": [
       "PATCH"
     ],
@@ -51,11 +53,19 @@
       },
       "hide": true
     },
+    "is_abandoned_after_days": {
+      "schema": {
+        "type": "integer",
+        "title": "Carrinho Abandonado",
+        "description": "Após quantos dias avisar ao comprador sobre o carrinho abandonado"
+      },
+      "hide": false
+    },
     "sendgrid_templates": {
       "schema": {
         "type": "array",
         "title": "Templantes dos e-mails",
-        "description": "Selecione quais trigger que terão e-mails enviados",
+        "description": "Selecione para quais tipos de gatilhos os e-mails serão enviados",
         "uniqueItems": true,
         "items": {
           "type": "object",
