@@ -1,4 +1,4 @@
-const listTemplantes = [
+const listTemplates = [
   {
     trigger: 'Carrinho Abandonado',
     status: 'abandoned_cart'
@@ -160,13 +160,13 @@ module.exports = (appData, status, orderOrCart, store, customer) => {
     ]
   }
 
-  const templantes = appData.sendgrid_templates
-  const nameTemplante = listTemplantes.find(type => type.status === status)
-  const templante = templantes.find(templateFind => templateFind.trigger === nameTemplante.trigger)
+  const templates = appData.sendgrid_templates
+  const nameTemplate = listTemplates.find(type => type.status === status)
+  const template = templates.find(templateFind => templateFind.trigger === nameTemplate.trigger)
 
-  if (templante && !templante.disable) {
+  if (template && !template.disable) {
     // console.log('> Template found and active <')
-    body.template_id = `${templante.id}`
+    body.template_id = `${template.id}`
     return body
   }
   return null
