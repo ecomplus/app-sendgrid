@@ -156,11 +156,11 @@ const app = {
       },
       hide: true,
     },
-    is_abandoned_after_days: {
+    abandoned_cart_delay: {
       schema: {
         type: 'integer',
         title: 'Carrinho Abandonado',
-        description: 'Após quantos dias avisar ao comprador sobre o carrinho abandonado'
+        description: 'Após quantas horas avisar ao comprador sobre o carrinho abandonado'
       },
       hide: false,
     },

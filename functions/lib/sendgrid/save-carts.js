@@ -4,16 +4,16 @@ const handleErr = require('./utils').handleErr
 
 module.exports = async (res, appSdk, appData, trigger, storeId) => {
   console.log('# Carts')
-  if (appData.is_abandoned_after_days) {
+  if (appData.abandoned_cart_delay) {
     const cartId = trigger.inserted_id
     try {
       const cart = await getCartById(appSdk, storeId, 'carts', cartId)
       if (cart) {
         const { customers, available, completed } = cart
         if (available && completed === false) {
-          const afterDaysInMs = (appData.is_abandoned_after_days || 1) * 24 * 60 * 60 * 1000
+          const afterHoursInMs = (appData.abandoned_cart_delay || 3)  * 60 * 60 * 1000
           const createAt = new Date()
-          const sendIn = new Date(createAt.getTime() + afterDaysInMs)
+          const sendIn = new Date(createAt.getTime() + afterHoursInMs)
           const customerId = customers[0]
 
           firestore()
