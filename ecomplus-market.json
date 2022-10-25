@@ -1,7 +1,7 @@
 {
   "app": {
-    "title": "",
-    "short_description": "",
-    "category": "tools"
+    "title": "SendGrid",
+    "short_description": "Customize os e-mails transacionais enviados pela sua loja e tenha mais controle sobre os disparos e estatísticas",
+    "category": "customer-service"
   }
 }
