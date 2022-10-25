@@ -5,6 +5,7 @@
   "type": "external",
   "state": "active",
   "authentication": true,
+  "github_repository": "https://github.com/ecomplus/app-sendgrid",
   "modules": {},
   "auth_scope": {
     "stores/me": [
@@ -41,7 +42,7 @@
       "schema": {
         "type": "string",
         "title": "E-mail configurado no SendGrid",
-        "description": "Seu e-mail de remetente configurado no SendGrid (https://app.sendgrid.com/settings/sender_auth/senders)"
+        "description": "Seu e-mail de remetente configurado no SendGrid ( https://app.sendgrid.com/settings/sender_auth/senders )"
       },
       "hide": true
     },
@@ -49,7 +50,7 @@
       "schema": {
         "type": "string",
         "title": "SendGrid key",
-        "description": "API key do SendGrid (https://app.sendgrid.com/settings/api_keys)"
+        "description": "API key do SendGrid ( https://app.sendgrid.com/settings/api_keys )"
       },
       "hide": true
     },
