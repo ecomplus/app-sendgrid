@@ -12,6 +12,7 @@ const app = {
   type: 'external',
   state: 'active',
   authentication: true,
+  github_repository: 'https://github.com/ecomplus/app-sendgrid',
 
   /**
    * Uncomment modules above to work with E-Com Plus Mods API on Storefront.
@@ -144,7 +145,7 @@ const app = {
       schema: {
         type: 'string',
         title: 'E-mail configurado no SendGrid',
-        description: 'Seu e-mail de remetente configurado no SendGrid (https://app.sendgrid.com/settings/sender_auth/senders)'
+        description: 'Seu e-mail de remetente configurado no SendGrid ( https://app.sendgrid.com/settings/sender_auth/senders )'
       },
       hide: true,
     },
@@ -152,7 +153,7 @@ const app = {
       schema: {
         type: 'string',
         title: 'SendGrid key',
-        description: 'API key do SendGrid (https://app.sendgrid.com/settings/api_keys)'
+        description: 'API key do SendGrid ( https://app.sendgrid.com/settings/api_keys )'
       },
       hide: true,
     },
